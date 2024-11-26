@@ -18,31 +18,33 @@ const App = () => {
         const response = await fetch(BASE_URL);
 
         const json = await response.json();
-        setData(json);
-        setFilteredData(json);
+        setData([...json]);
+        setFilteredData([...json]);
         setLoading(false);
       } catch (error) {
         setError("Unable to Fetch Data");
       }
     };
+
     fetchFoodData();
   }, []);
 
   const searchFood = (e) => {
     const searchValue = e.target.value;
+
     if (searchValue === "") {
-      setFilteredData(null);
+      setFilteredData([...data]);
     }
     const filter = data?.filter((food) =>
       food.name.toLowerCase().includes(searchValue.toLowerCase())
     );
+
     setFilteredData(filter);
   };
 
- 
-
   if (error) return <div>{error}</div>;
   if (loading) return <div>loading...</div>;
+
   return (
     <>
       {" "}
@@ -87,5 +89,8 @@ const TopContainer = styled.div`
     height: 40px;
     padding: 0 10px;
     font-size: 16px;
+  }
+  @media (0 < width < 600px) {
+    flex-direction: column;
   }
 `;

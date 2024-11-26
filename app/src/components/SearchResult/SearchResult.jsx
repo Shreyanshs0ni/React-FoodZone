@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { BASE_URL, Container } from "../../App";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const SearchResult = ({ data }) => {
   const [filteredData, setFilteredData] = useState(data);
@@ -37,17 +37,27 @@ const SearchResult = ({ data }) => {
     setFilteredData(filter);
     setSelectedButton(type);
   };
+
+  useEffect(() => {
+    setFilteredData(data);
+  }, [data]);
+
   return (
     <Container>
       {" "}
       <FoodCardsContainer>
         <FilterContainer>
           {filterBtns.map((values) => (
-            <Button key={values.name} onClick={() => filteredFood(values.type)}>
+            <Button
+              isSelected={selectedButton === values.type}
+              key={values.name}
+              onClick={() => filteredFood(values.type)}
+            >
               {values.name}
             </Button>
           ))}
         </FilterContainer>
+
         <FoodCards>
           {filteredData?.map(({ name, image, text, price }) => (
             <FoodCard key={name}>
@@ -78,17 +88,20 @@ const FilterContainer = styled.div`
   padding: 20px 0;
 `;
 
-const Button = styled.button`
-  background: #e50001;
+const Button = styled("button").withConfig({
+  shouldForwardProp: (prop) => ![`isSelected`].includes(prop),
+})`
+  background: ${({ isSelected }) => (isSelected ? "#FDC702" : "#e50001")};
   border-radius: 5px;
   padding: 6px 12px;
   border: none;
-  color: #fdc702;
+  color: ${({ isSelected }) => (!isSelected ? "#FDC702" : "#e50001")};
   transition: 0.3s;
   &:hover {
     cursor: pointer;
     box-shadow: 3px 3px;
-    background-color: #c60000;
+    background-color: ${({ isSelected }) =>
+      isSelected ? "#FDC702" : "#e50001"};
   }
 `;
 
