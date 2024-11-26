@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import SearchResult from "./components/SearchResult/SearchResult";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const BASE_URL = "http://localhost:9000";
 
 const App = () => {
@@ -37,6 +38,8 @@ const App = () => {
     );
     setFilteredData(filter);
   };
+
+ 
 
   if (error) return <div>{error}</div>;
   if (loading) return <div>loading...</div>;

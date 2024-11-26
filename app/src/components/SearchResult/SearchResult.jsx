@@ -1,19 +1,55 @@
 import styled from "styled-components";
 import { BASE_URL, Container } from "../../App";
+import { useState } from "react";
 
 const SearchResult = ({ data }) => {
+  const [filteredData, setFilteredData] = useState(data);
+  const [selectedButton, setSelectedButton] = useState("all");
+
+  const filterBtns = [
+    {
+      name: "All",
+      type: "all",
+    },
+    {
+      name: "Burger",
+      type: "burger",
+    },
+    {
+      name: "Drinks",
+      type: "drinks",
+    },
+    {
+      name: "Siders",
+      type: "siders",
+    },
+  ];
+
+  const filteredFood = (type) => {
+    if (type === "all") {
+      setFilteredData(data);
+      setSelectedButton("all");
+      return;
+    }
+    const filter = data?.filter((food) =>
+      food.type.toLowerCase().includes(type.toLowerCase())
+    );
+    setFilteredData(filter);
+    setSelectedButton(type);
+  };
   return (
     <Container>
       {" "}
       <FoodCardsContainer>
         <FilterContainer>
-          <Button>All</Button>
-          <Button>Burgers</Button>
-          <Button>Drinks</Button>
-          <Button>Sides</Button>
+          {filterBtns.map((values) => (
+            <Button key={values.name} onClick={() => filteredFood(values.type)}>
+              {values.name}
+            </Button>
+          ))}
         </FilterContainer>
         <FoodCards>
-          {data?.map(({ name, image, text, price }) => (
+          {filteredData?.map(({ name, image, text, price }) => (
             <FoodCard key={name}>
               <div className="food_image">
                 <img src={BASE_URL + image} />
@@ -52,11 +88,12 @@ const Button = styled.button`
   &:hover {
     cursor: pointer;
     box-shadow: 3px 3px;
+    background-color: #c60000;
   }
 `;
 
 const FoodCardsContainer = styled.section`
-  height: calc(100vh - 110px);
+  min-height: calc(100vh - 110px);
   background-image: url("/background.png");
   background-size: cover;
 `;
@@ -67,6 +104,7 @@ const FoodCards = styled.div`
   column-gap: 20px;
   justify-content: center;
   align-items: center;
+  padding: 10px 0;
 `;
 
 const FoodCard = styled.div`
